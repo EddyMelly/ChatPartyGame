@@ -1,27 +1,30 @@
 import TwitchApi from './TwitchApi.js';
-
+import JoiningScreen from './JoiningScreen.js';
 const GAMESTATE = {
   PAUSED: 0,
   JOINING: 1,
 };
-
-var savedGamestate;
 
 export default class Game {
   constructor(gameWidth, gameHeight, ctx) {
     this.ctx = ctx;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
+    this.gameObjects = [];
+    this.JoiningScreen = new JoiningScreen(this);
     this.savedGameState = null;
-    this.allTeams = { red: [], blue: [], green: [], yellow: [] };
+    this.allTeams = {
+      red: [],
+      blue: [],
+      green: [],
+      yellow: [],
+    };
     this.allPlayers = [];
-    // this.player = new Player(this);
-    // this.restartStatus = false;
   }
 
   start() {
-    this.gamestate = GAMESTATE.JOINING;
-    // this.gameObjects = [this.player, this.fences];
+    this.savedGameState = GAMESTATE.JOINING;
+    this.gameObjects = [this.JoiningScreen];
     this.TwitchApi = new TwitchApi('ceremor', this);
     this.TwitchApi.connectTwitchChat();
   }
@@ -31,6 +34,7 @@ export default class Game {
       case GAMESTATE.PAUSED:
         break;
       case GAMESTATE.JOINING:
+        this.gameObjects = [this.JoiningScreen];
         // this.gameObjects = [
         //   this.player,
         //   ...this.fences,
@@ -77,11 +81,10 @@ export default class Game {
     //   savedGamestate = this.gamestate;
     // }
 
-    // this.gameObjects.forEach((object) => object.draw(ctx));
+    this.gameObjects.forEach((object) => object.draw(ctx));
     ctx.font = '12px Monospace';
     ctx.fillStyle = 'white';
     ctx.textAlign = 'left';
-    // ctx.fillText(this.lastUser.username, 150, 10);
   }
 
   displayMessage(ctx, rgbValue, message) {

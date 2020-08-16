@@ -2,7 +2,7 @@ const GAMESTATE = {
   PAUSED: 0,
   JOINING: 1,
 };
-
+var lowestTeam = 'red';
 export default class TwitchApi {
   constructor(channel, game) {
     this.channel = channel;
@@ -54,16 +54,15 @@ export default class TwitchApi {
       var clean_username = DOMPurify.sanitize(message.username, {
         ALLOWED_TAGS: ['b'],
       });
-      var uppercaseUserName = clean_username.toUpperCase();
+      var uppercaseMessage = clean_message.toUpperCase();
+      var upperCaseMessageClean = uppercaseMessage.replace(/ .*/, '');
 
       switch (this.game.savedGameState) {
         case GAMESTATE.JOINING:
           //JOIN TEAM LOGIC
-          this.decideMessage(
-            clean_message,
-            message.tags['badgeInfo'],
-            uppercaseUserName
-          );
+          if (upperCaseMessageClean === 'JOIN') {
+            this.addUserToTeam(clean_username);
+          }
           break;
         case GAMESTATE.PAUSED:
           //DO NOTHING
@@ -72,35 +71,41 @@ export default class TwitchApi {
     });
   }
 
-  userJoin(cleanMessage, cleanUserName, subBadge) {
-    if (!this.checkIfJoined(cleanUserName)) {
+  addUserToTeam(cleanUserName) {
+    if (this.game.allPlayers.length < 20) {
+      if (!this.checkIfJoined(cleanUserName)) {
+        let lowestTeam = this.determineLowestTeam();
+        console.log('adding ' + cleanUserName + ' to team ' + lowestTeam);
+
+        this.game.allTeams[lowestTeam].push(cleanUserName);
+        console.log(this.game.allTeams[lowestTeam]);
+        this.game.allPlayers.push(cleanUserName);
+      }
+    } else {
+      console.log('all full, not added');
     }
   }
 
-  joinUser(userName) {
-    //determine lowest
-    //add to all players
+  determineLowestTeam() {
+    for (const team in this.game.allTeams) {
+      if (this.game.allTeams[team].length === 0) {
+        lowestTeam = team;
+        return lowestTeam;
+      }
+    }
+    for (const team in this.game.allTeams) {
+      if (
+        this.game.allTeams[team].length < this.game.allTeams[lowestTeam].length
+      ) {
+        lowestTeam = team;
+      }
+    }
+    return lowestTeam;
   }
 
   checkIfJoined(userName) {
     if (this.game.allPlayers.includes(userName)) {
-      return true;
-      console.log('new name adding');
-    } else {
-      return false;
-      console.log('old name not adding');
-    }
-  }
-  decideMessage(cleanMessage, subBadge, cleanUserName) {
-    var uppercaseMessage = cleanMessage.toUpperCase();
-    var uppercaseUserName = cleanUserName.toUpperCase();
-    var upperCaseMessageClean = uppercaseMessage.replace(/ .*/, '');
-    if (this.subCheck(subBadge)) {
-    }
-  }
-
-  subCheck(subscriber) {
-    if (subscriber !== '') {
+      console.log(userName + ' is already listed');
       return true;
     } else {
       return false;
