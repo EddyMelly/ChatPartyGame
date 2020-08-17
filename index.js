@@ -6,12 +6,19 @@ const GAME_HEIGHT = 450;
 let lastTime = 0;
 var game;
 
-game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx);
-game.start();
+window.onload = function(){
+  startFirst();
+};
 
 export function restart() {
   game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx);
   game.start();
+}
+
+function startFirst() {
+  game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx);
+  game.start();
+  requestAnimationFrame(gameLoop);
 }
 
 function gameLoop(timestamp) {
@@ -27,4 +34,4 @@ function gameLoop(timestamp) {
   requestAnimationFrame(gameLoop);
 }
 
-requestAnimationFrame(gameLoop);
+

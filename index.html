@@ -27,7 +27,7 @@
     
 </head>
   <!-- prettier-ignore -->
-  <body>
+  <body onload ="startFirst()">
     <div id="container">
         <div id="canvasplate">
             <canvas id="gameScreen" width="800" height="450" style="background: url('./images/backImage.png');border:5px solid purple;position:absolute;top:100px;z-index:45;">
@@ -36,6 +36,7 @@
     </div>
         <label id="status" style="position:absolute;left:200px;top:600px;width:455px;height:62px;line-height:62px;z-index:47;">???</label>
     </div>
+    <div id="preloadfont">.</div>
 
     <div id="PageHeader1" style="position:absolute;text-align:left;left:0px;top:0px;width:100%;height:92px;z-index:7777;">
         <div id="wb_title" style="position:absolute;left:360px;top:17px;width:486px;height:59px;text-align:center;z-index:1;">

@@ -1,3 +1,22 @@
+@font-face {
+  font-family: 'luckiest_guyregular';
+  src: url('/fonts/luckiestguy-regular-webfont.woff') format('woff2'),
+       url('/fonts/luckiestguy-regular-webfont.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@font-face {
+  font-family: 'galindoregular';
+  src: url('./fonts/galindo-regular-webfont.woff2') format('woff2'),
+       url('./fonts/galindo-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+
 div#container {
   width: 1201px;
   position: relative;
@@ -15,6 +34,8 @@ body {
   text-align: center;
   background-color: #1f1f23;
 }
+
+
 
 #myCanvas {
   background-color: #32cd32;
