@@ -30,7 +30,7 @@ export class GlassTile {
     if (this.currentTile === 3) {
       this.game.players.forEach((player) => {
         if (lavaDetection(this, player)) {
-          console.log('hit');
+          player.death();
         }
       });
     }

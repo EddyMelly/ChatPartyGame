@@ -3,6 +3,10 @@ import { pushingDetection } from './CollisionDetection.js';
 import { GAMESTATE, DIRECTIONS, COLOUR } from './SharedConstants.js';
 const SPRITE_SIZE = 50;
 
+const PLAYER_STATE = {
+  ALIVE: 0,
+  DEAD: 1,
+};
 export default class Player {
   constructor(game, colour) {
     this.colour = colour;
@@ -14,13 +18,7 @@ export default class Player {
     let yPosition = this.game.gameArea.endY - this.height;
     this.position = { x: xPosition, y: yPosition };
     this.canMove = true;
-    this.sprite_sheet = {
-      frame_sets: [
-        [0, 1],
-        [2, 3, 4, 5, 6],
-      ],
-      image: document.getElementById('redAnimationStrip'),
-    };
+    this.playerState = PLAYER_STATE.ALIVE;
 
     switch (this.colour) {
       case COLOUR.RED:
@@ -28,25 +26,35 @@ export default class Player {
           x: this.game.gameArea.startX,
           y: this.game.gameArea.startY,
         };
+        this.animationStrip = document.getElementById('redAnimationStrip');
         break;
       case COLOUR.BLUE:
         this.position = {
           x: this.game.gameArea.endX - this.width,
           y: this.game.gameArea.startY,
         };
+        this.animationStrip = document.getElementById('blueAnimationStrip');
         break;
       case COLOUR.GREEN:
         this.position = {
           x: this.game.gameArea.startX,
           y: this.game.gameArea.endY - this.height,
         };
+        this.animationStrip = document.getElementById('greenAnimationStrip');
         break;
       case COLOUR.YELLOW:
         this.position = {
           x: this.game.gameArea.endX - this.width,
           y: this.game.gameArea.endY - this.height,
         };
+        this.animationStrip = document.getElementById('yellowAnimationStrip');
+        break;
     }
+
+    this.sprite_sheet = {
+      frame_sets: [[0, 1], [2, 3, 4, 5, 6], [7]],
+      image: this.animationStrip,
+    };
     this.animation = new Animation(this.sprite_sheet.frame_sets[0], 30);
     this.movement = {
       activated: false,
@@ -71,8 +79,6 @@ export default class Player {
     this.otherPlayers = this.game.players.filter(
       (object) => object.colour != this.colour
     );
-
-    console.log('thisteam:' + this.colour + 'otherTeams:' + this.otherPlayers);
   }
 
   movingDirection(direction) {
@@ -101,12 +107,14 @@ export default class Player {
           break;
       }
     } else {
-      this.resetMovement();
+      if (this.playerState === PLAYER_STATE.ALIVE) {
+        this.resetMovement();
+      }
     }
   }
 
   moveLeft() {
-    if (this.canMove) {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = DIRECTIONS.LEFT;
       this.movement.activated = true;
       this.canMove = false;
@@ -114,10 +122,19 @@ export default class Player {
     }
   }
 
-  getPushed() {}
+  death() {
+    if (this.playerState === PLAYER_STATE.ALIVE) {
+      this.canMove = false;
+      this.animation.change(this.sprite_sheet.frame_sets[2], 5);
+      this.playerState = PLAYER_STATE.DEAD;
+      setTimeout(() => {
+        this.game.removePlayer(this);
+      }, 7000);
+    }
+  }
 
   moveRight() {
-    if (this.canMove) {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = DIRECTIONS.RIGHT;
       this.movement.activated = true;
       this.canMove = false;
@@ -125,7 +142,7 @@ export default class Player {
     }
   }
   moveUp() {
-    if (this.canMove) {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = DIRECTIONS.UP;
       this.movement.activated = true;
       this.canMove = false;
@@ -133,7 +150,7 @@ export default class Player {
     }
   }
   moveDown() {
-    if (this.canMove) {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = DIRECTIONS.DOWN;
       this.movement.activated = true;
       this.canMove = false;
@@ -142,7 +159,7 @@ export default class Player {
   }
 
   push(direction) {
-    if (this.canMove) {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = direction;
       this.movement.activated = true;
       this.canMove = false;
@@ -180,19 +197,20 @@ export default class Player {
         }
       });
     }
-
     this.animation.update(deltaTime);
 
-    // if (this.position.x < this.game.gameArea.startX)
-    //   this.position.x = this.game.gameArea.startX;
-    // if (this.position.x + this.width > this.game.gameArea.endX) {
-    //   this.position.x = this.game.gameArea.endX - this.width;
-    // }
-    // if (this.position.y < this.game.gameArea.startY) {
-    //   this.position.y = this.game.gameArea.startY;
-    // }
-    // if (this.position.y + this.height > this.game.gameArea.endY) {
-    //   this.position.y = this.game.gameArea.endY;
-    // }
+    if (this.position.x < this.game.gameArea.startX) this.death();
+    if (this.position.x + this.width > this.game.gameArea.endX) {
+      this.death();
+    }
+    if (this.position.y < this.game.gameArea.startY) {
+      this.death();
+    }
+    if (this.position.y + this.height > this.game.gameArea.endY) {
+      this.death();
+    }
+
+    if (this.playerState === PLAYER_STATE.DEAD) {
+    }
   }
 }

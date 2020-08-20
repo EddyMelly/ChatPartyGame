@@ -71,6 +71,13 @@ export default class Game {
     }
   }
 
+  removePlayer(player) {
+    this.players = this.players.filter((object) => object !== player);
+    this.players.forEach((player) => {
+      player.determineOtherTeams();
+    });
+  }
+
   // clearOfRect(ctx) {
   //   ctx.clearRect(0, 0, this.width, this.height);
   //   ctx.closePath();

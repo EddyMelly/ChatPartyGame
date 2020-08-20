@@ -25,6 +25,7 @@ export default class GlassGame {
     this.glassTilesNotBreaking = [];
     this.animationTimer = 0;
     this.timer = 0;
+    this.backGroundImage = document.getElementById('lavaBackground');
   }
 
   buildLevel(game) {
@@ -58,7 +59,7 @@ export default class GlassGame {
   callEverySecond() {
     this.timer = this.timer + 1;
     if (this.timer % 4 === 0) {
-      //this.chooseTileToBreak();
+      this.chooseTileToBreak();
     }
   }
 
@@ -81,6 +82,7 @@ export default class GlassGame {
   }
 
   draw(ctx) {
+    ctx.drawImage(this.backGroundImage, 300, 50, 600, 600);
     this.glassTiles.forEach((object) => object.draw(ctx));
   }
 }
