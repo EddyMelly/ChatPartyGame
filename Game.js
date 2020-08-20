@@ -1,18 +1,40 @@
 import TwitchApi from './TwitchApi.js';
 import JoiningScreen from './JoiningScreen.js';
-const GAMESTATE = {
-  PAUSED: 0,
-  JOINING: 1,
-};
+import InputHandler from './InputHandler.js';
+import Player from './Player.js';
+import GlassGame from './GlassGame.js';
+import { GAMESTATE, COLOUR } from './SharedConstants.js';
+// const GAMESTATE = {
+//   PAUSED: 0,
+//   JOINING: 1,
+//   FIRSTGAME: 2,
+// };
+// const COLOUR = {
+//   RED: 0,
+//   BLUE: 1,
+//   GREEN: 2,
+//   YELLOW: 3,
+// };
 
+var savedGameState;
 export default class Game {
-  constructor(gameWidth, gameHeight, ctx) {
+  constructor(gameWidth, gameHeight, ctx, gameArea) {
+    this.gameArea = gameArea;
     this.ctx = ctx;
+    this.glassGame = null;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.gameObjects = [];
+    this.players = [
+      new Player(this, COLOUR.RED),
+      new Player(this, COLOUR.BLUE),
+      new Player(this, COLOUR.GREEN),
+      new Player(this, COLOUR.YELLOW),
+    ];
+    new InputHandler(this.players[0], this, COLOUR.RED);
+    new InputHandler(this.players[3], this, COLOUR.YELLOW);
     this.JoiningScreen = new JoiningScreen(this);
-    this.savedGameState = null;
+    this.currentGameState = null;
     this.allTeams = {
       red: [],
       blue: [],
@@ -23,48 +45,28 @@ export default class Game {
   }
 
   start() {
-    this.savedGameState = GAMESTATE.JOINING;
-    this.gameObjects = [this.JoiningScreen];
+    this.currentGameState = GAMESTATE.FIRSTGAME;
+    // this.gameObjects = [this.JoiningScreen];
+    this.gameObjects = [...this.players];
+    this.players.forEach((object) => object.determineOtherTeams());
     this.TwitchApi = new TwitchApi('ceremor', this);
     this.TwitchApi.connectTwitchChat();
   }
 
   update(deltaTime) {
-    switch (this.gamestate) {
+    switch (this.currentGameState) {
       case GAMESTATE.PAUSED:
         break;
       case GAMESTATE.JOINING:
         this.gameObjects = [this.JoiningScreen];
-        // this.gameObjects = [
-        //   this.player,
-        //   ...this.fences,
-        //   ...this.player.bullets,
-        // ];
-        // this.gameObjects.forEach((object) => object.update(deltaTime));
-        // this.gameObjects = this.gameObjects.filter(
-        //   (object) => !object.markedForDeletion
-        // );
-        // if (this.fences.length <= 11 && this.fences.length > 5) {
-        //   this.fences.forEach((fence) => {
-        //     fence.intervalUpper = 27;
-        //     fence.intervalLower = 11;
-        //     fence.bulletSpeedModifier = 0.3;
-        //   });
-        // }
-        // if (this.fences.length <= 5) {
-        //   this.fences.forEach((fence) => {
-        //     fence.intervalUpper = 20;
-        //     fence.intervalLower = 10;
-        //     fence.bulletSpeedModifier = 0.35;
-        //   });
-        // }
-        // if (this.fences.length === 0) {
-        //   //move this out
-        //   this.setUpCutScene();
-        //   this.lastUser = { username: '', instruction: 'unknown' };
-        //   this.gamestate = GAMESTATE.CUTSCENE;
-        // }
-        // this.fences = this.fences.filter((object) => !object.markedForDeletion);
+        break;
+      case GAMESTATE.FIRSTGAME:
+        if (this.glassGame === null) {
+          this.glassGame = new GlassGame(this);
+          this.gameObjects.push(this.glassGame);
+        }
+        this.gameObjects = [this.glassGame, ...this.players];
+        this.gameObjects.forEach((object) => object.update(deltaTime));
         break;
     }
   }

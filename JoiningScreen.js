@@ -13,7 +13,7 @@ export default class JoiningScreen {
 
   draw(ctx) {
     for (const team in this.game.allTeams) {
-      ctx.font = '40px luckiest_guyregular';
+      ctx.font = '20px luckiest_guyregular';
       ctx.fillStyle = team;
       ctx.textAlign = 'center';
       ctx.fillText(
@@ -24,9 +24,9 @@ export default class JoiningScreen {
       var yposition = 20;
 
       for (const player of this.game.allTeams[team]) {
-        ctx.font = '20px galindoregular';
+        ctx.font = '12px galindoregular';
         ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
+        ctx.textAlign = 'left';
         ctx.fillText(
           player,
           this.teamNamePositions[team].x,

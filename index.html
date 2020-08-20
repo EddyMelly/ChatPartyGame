@@ -15,11 +15,17 @@
     <script src="./index.js" type="module"></script>
     <script src="./TwitchApi.js" type="module"></script>
     <script src="./Game.js" type="module"></script>
+
+
     
     <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
 
    
     <!-- <img id="ceremorBanned" src="images/ceremorBanned.png" style="display:none"/> -->
+    <img id="redPlayer" src="images/redPlayer.png" style="display:none"/>
+    <img id="glassTile" src="images/glasstile4.png" style="display:none"/>
+    <img id="redAnimationStrip" src="images/redanimationStrip.png" style="display:none"/>
+    <img id="glassTileSheet" src="images/glassTileSheet.png" style="display:none"/>
     
     
     <!-- <audio id="bossScream" src="./sounds/bossScream.wav"></audio> -->
@@ -30,13 +36,12 @@
   <body>
     <div id="container">
         <div id="canvasplate">
-            <canvas id="gameScreen" width="800" height="450" style="background: url('./images/backImage.png');border:5px solid purple;position:absolute;top:100px;z-index:45;">
+            <canvas id="gameScreen" width="1200" height="700">
             Your browser does not support the HTML5 canvas tag.
         </canvas>
     </div>
-        <label id="status" style="position:absolute;left:200px;top:600px;width:455px;height:62px;line-height:62px;z-index:47;">???</label>
+        <label id="status" style="position:absolute;left:350px;top:800px;width:455px;height:62px;line-height:62px;z-index:47;">???</label>
     </div>
-    <div id="preloadfont">.</div>
 
     <div id="PageHeader1" style="position:absolute;text-align:left;left:0px;top:0px;width:100%;height:92px;z-index:7777;">
         <div id="wb_title" style="position:absolute;left:360px;top:17px;width:486px;height:59px;text-align:center;z-index:1;">

@@ -1,22 +1,23 @@
 import Game from './Game.js';
 let canvas = document.getElementById('gameScreen');
 let ctx = canvas.getContext('2d');
-const GAME_WIDTH = 800;
-const GAME_HEIGHT = 450;
+const GAME_WIDTH = 1200;
+const GAME_HEIGHT = 700;
+const GAME_AREA = { startX: 350, startY: 100, endX: 850, endY: 600 };
 let lastTime = 0;
 var game;
 
-window.onload = function(){
+window.onload = function () {
   startFirst();
 };
 
 export function restart() {
-  game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx);
+  game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx, GAME_AREA);
   game.start();
 }
 
 function startFirst() {
-  game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx);
+  game = new Game(GAME_WIDTH, GAME_HEIGHT, ctx, GAME_AREA);
   game.start();
   requestAnimationFrame(gameLoop);
 }
@@ -34,4 +35,4 @@ function gameLoop(timestamp) {
   requestAnimationFrame(gameLoop);
 }
 
-
+requestAnimationFrame(gameLoop);
