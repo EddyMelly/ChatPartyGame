@@ -1,7 +1,7 @@
 import { GlassTile } from './GlassTile.js';
 const LEVEL_STATE = {
   PAUSED: 0,
-  RUNNING: 0,
+  RUNNING: 1,
 };
 const level = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -19,6 +19,7 @@ const level = [
 export default class GlassGame {
   constructor(game) {
     this.game = game;
+    this.levelState = LEVEL_STATE.PAUSED;
     this.glassTiles = [];
     this.buildLevel(this.game);
     this.glassTilesBreaking = [];
@@ -26,6 +27,7 @@ export default class GlassGame {
     this.animationTimer = 0;
     this.timer = 0;
     this.backGroundImage = document.getElementById('lavaBackground');
+    this.startMessage = '';
   }
 
   buildLevel(game) {
@@ -58,12 +60,50 @@ export default class GlassGame {
 
   callEverySecond() {
     this.timer = this.timer + 1;
-    if (this.timer % 4 === 0) {
-      this.chooseTileToBreak();
+    switch (this.levelState) {
+      case LEVEL_STATE.RUNNING:
+        if (this.timer % 3 === 0 && this.glassTiles.length >= 1) {
+          this.chooseTileToBreak();
+        }
+        break;
+      case LEVEL_STATE.PAUSED:
+        this.displayStart(this.timer);
+        break;
+    }
+  }
+
+  displayStart(timer) {
+    switch (timer) {
+      case 0:
+        this.startMessage = '3';
+        break;
+      case 1:
+        this.startMessage = '3';
+        break;
+      case 2:
+        this.startMessage = '2';
+        break;
+      case 3:
+        this.startMessage = '1';
+        break;
+      case 4:
+        this.startMessage = 'GO!';
+        break;
+      case 5:
+        this.startMessage = '';
+        this.timer = 0;
+        this.levelState = LEVEL_STATE.RUNNING;
+        break;
     }
   }
 
   update(deltaTime) {
+    switch (this.levelState) {
+      case LEVEL_STATE.PAUSED:
+        break;
+      case LEVEL_STATE.RUNNING:
+        break;
+    }
     this.glassTilesNotBreaking = this.glassTiles.filter(
       (object) => !object.breaking
     );
@@ -83,6 +123,13 @@ export default class GlassGame {
 
   draw(ctx) {
     ctx.drawImage(this.backGroundImage, 300, 50, 600, 600);
+    if (this.levelState === LEVEL_STATE.PAUSED) {
+      ctx.font = '40px luckiest_guyregular';
+      ctx.fillStyle = 'white';
+      ctx.textAlign = 'center';
+
+      ctx.fillText(this.startMessage, 600, 45);
+    }
     this.glassTiles.forEach((object) => object.draw(ctx));
   }
 }

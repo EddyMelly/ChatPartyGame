@@ -96,14 +96,6 @@ export default class TwitchApi {
       (player) => player.userName === userName
     );
     if (result) {
-      console.log(
-        result.userName +
-          ' is trying to perform ' +
-          instruction +
-          ' on team ' +
-          result.team
-      );
-
       if (
         this.game.players.some((player) => player.teamColour === result.team)
       ) {
@@ -111,8 +103,11 @@ export default class TwitchApi {
           (x) => x.teamColour === result.team
         ).player;
         if (foundTeam) {
-          console.log(foundTeam);
           this.completeInstruction(foundTeam, instruction);
+          this.game.contestantPanels.changeInstruction(
+            instruction,
+            result.team
+          );
         }
       }
     }
@@ -138,21 +133,19 @@ export default class TwitchApi {
   }
 
   addUserToTeam(cleanUserName) {
-    if (this.game.allPlayers.length < 20) {
+    if (this.game.allPlayers.length <= 19) {
       if (!this.checkIfJoined(cleanUserName)) {
         let lowestTeam = this.determineLowestTeam();
         console.log('adding ' + cleanUserName + ' to team ' + lowestTeam);
-
         this.game.allTeams[lowestTeam].push(cleanUserName);
-        console.log(this.game.allTeams[lowestTeam]);
-        console.log('after this');
         this.game.allPlayers.push({
           userName: cleanUserName,
           team: lowestTeam,
         });
+        if (this.game.allPlayers.length === 20) {
+          this.game.startGlassGame();
+        }
       }
-    } else {
-      console.log('all full, not added');
     }
   }
 
@@ -174,10 +167,12 @@ export default class TwitchApi {
   }
 
   checkIfJoined(userName) {
-    if (this.game.allPlayers.some((player) => player.userName === userName)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
+    //CHANGETHIS
+    // if (this.game.allPlayers.some((player) => player.userName === userName)) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   }
 }

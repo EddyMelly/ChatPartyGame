@@ -3,6 +3,7 @@ import JoiningScreen from './JoiningScreen.js';
 import InputHandler from './InputHandler.js';
 import Player from './Player.js';
 import GlassGame from './GlassGame.js';
+import ContestantPanels from './ContestantPanels.js';
 import { GAMESTATE, COLOUR } from './SharedConstants.js';
 
 var savedGameState;
@@ -24,6 +25,7 @@ export default class Game {
     new InputHandler(this.players[0], this, COLOUR.RED);
     new InputHandler(this.players[3], this, COLOUR.YELLOW);
     this.JoiningScreen = new JoiningScreen(this);
+    this.contestantPanels = new ContestantPanels(this);
     this.currentGameState = null;
     this.allTeams = {
       RED: [],
@@ -36,17 +38,20 @@ export default class Game {
   }
 
   start() {
-    this.currentGameState = GAMESTATE.FIRSTGAME;
-    //this.gameObjects = [this.JoiningScreen];
-
+    this.currentGameState = GAMESTATE.JOINING;
+    this.gameObjects = [this.JoiningScreen];
     this.players.forEach((element) => {
       this.extractedPlayers.push(element.player);
     });
 
-    this.gameObjects = [...this.extractedPlayers];
     this.players.forEach((object) => object.player.determineOtherTeams());
     this.TwitchApi = new TwitchApi('edgarmelons', this);
     this.TwitchApi.connectTwitchChat();
+  }
+
+  startGlassGame() {
+    this.gameObjects = [this.contestantPanels, ...this.extractedPlayers];
+    this.currentGameState = GAMESTATE.FIRSTGAME;
   }
 
   update(deltaTime) {
@@ -54,7 +59,8 @@ export default class Game {
       case GAMESTATE.PAUSED:
         break;
       case GAMESTATE.JOINING:
-        this.gameObjects = [this.JoiningScreen];
+        this.gameObjects = [this.contestantPanels, this.JoiningScreen];
+        this.gameObjects.forEach((object) => object.update(deltaTime));
 
         break;
       case GAMESTATE.FIRSTGAME:
@@ -62,7 +68,11 @@ export default class Game {
           this.glassGame = new GlassGame(this);
           this.gameObjects.push(this.glassGame);
         }
-        this.gameObjects = [this.glassGame, ...this.extractedPlayers];
+        this.gameObjects = [
+          this.contestantPanels,
+          this.glassGame,
+          ...this.extractedPlayers,
+        ];
         this.gameObjects.forEach((object) => object.update(deltaTime));
 
         if (this.players.length <= 1) {
@@ -70,6 +80,7 @@ export default class Game {
         }
         break;
       case GAMESTATE.VICTORY:
+        this.gameObjects = [this.contestantPanels];
     }
   }
 
@@ -81,7 +92,6 @@ export default class Game {
     this.players.forEach((object) => {
       object.player.determineOtherTeams();
     });
-    this.e;
   }
 
   // clearOfRect(ctx) {
@@ -128,9 +138,8 @@ export default class Game {
   // }
 
   victory(player) {
-    //console.log(Object.keys(COLOUR)[player.colour]);
     console.log(player.teamColour + 'wins');
-    this.gamestate = GAMESTATE.VICTORY;
+    this.currentGameState = GAMESTATE.VICTORY;
     // playSound(this.victoryTune);
     this.restartStatus = true;
     // setTimeout(function () {

@@ -41,7 +41,7 @@ body {
 }
 
 #gameScreen {
-  background: url('./images/backImage.png');
+  background: url('./images/backgroundImage.png');
   border: 5px solid purple;
   position: relative;
   left: 45px;
