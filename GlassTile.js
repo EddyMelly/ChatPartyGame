@@ -28,9 +28,9 @@ export class GlassTile {
     }
 
     if (this.currentTile === 3) {
-      this.game.players.forEach((player) => {
-        if (lavaDetection(this, player)) {
-          player.death();
+      this.game.players.forEach((object) => {
+        if (lavaDetection(this, object.player)) {
+          object.player.death();
         }
       });
     }

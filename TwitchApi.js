@@ -1,7 +1,4 @@
-const GAMESTATE = {
-  PAUSED: 0,
-  JOINING: 1,
-};
+import { GAMESTATE, COLOUR, DIRECTIONS } from './SharedConstants.js';
 var lowestTeam = 'red';
 export default class TwitchApi {
   constructor(channel, game) {
@@ -57,18 +54,87 @@ export default class TwitchApi {
       var uppercaseMessage = clean_message.toUpperCase();
       var upperCaseMessageClean = uppercaseMessage.replace(/ .*/, '');
 
-      switch (this.game.savedGameState) {
+      switch (this.game.currentGameState) {
         case GAMESTATE.JOINING:
-          //JOIN TEAM LOGIC
           if (upperCaseMessageClean === 'JOIN') {
             this.addUserToTeam(clean_username);
+          }
+          if (
+            upperCaseMessageClean === DIRECTIONS.LEFT ||
+            upperCaseMessageClean === DIRECTIONS.RIGHT ||
+            upperCaseMessageClean === DIRECTIONS.UP ||
+            upperCaseMessageClean === DIRECTIONS.DOWN
+          ) {
+            this.performInstruction(clean_username, upperCaseMessageClean);
           }
           break;
         case GAMESTATE.PAUSED:
           //DO NOTHING
           break;
+        case GAMESTATE.VICTORY:
+          //VICTORY
+          break;
+        case GAMESTATE.FIRSTGAME:
+          if (upperCaseMessageClean === 'JOIN') {
+            this.addUserToTeam(clean_username);
+          }
+          if (
+            upperCaseMessageClean === DIRECTIONS.LEFT ||
+            upperCaseMessageClean === DIRECTIONS.RIGHT ||
+            upperCaseMessageClean === DIRECTIONS.UP ||
+            upperCaseMessageClean === DIRECTIONS.DOWN
+          ) {
+            this.performInstruction(clean_username, upperCaseMessageClean);
+          }
       }
     });
+  }
+
+  performInstruction(userName, instruction) {
+    var foundTeam;
+    var result = this.game.allPlayers.find(
+      (player) => player.userName === userName
+    );
+    if (result) {
+      console.log(
+        result.userName +
+          ' is trying to perform ' +
+          instruction +
+          ' on team ' +
+          result.team
+      );
+
+      if (
+        this.game.players.some((player) => player.teamColour === result.team)
+      ) {
+        var foundTeam = this.game.players.find(
+          (x) => x.teamColour === result.team
+        ).player;
+        if (foundTeam) {
+          console.log(foundTeam);
+          this.completeInstruction(foundTeam, instruction);
+        }
+      }
+    }
+  }
+
+  completeInstruction(playerTeam, instruction) {
+    switch (instruction) {
+      case DIRECTIONS.LEFT:
+        playerTeam.moveLeft();
+        break;
+      case DIRECTIONS.RIGHT:
+        playerTeam.moveRight();
+        break;
+      case DIRECTIONS.UP:
+        playerTeam.moveUp();
+        break;
+      case DIRECTIONS.DOWN:
+        playerTeam.moveDown();
+        break;
+      default:
+        break;
+    }
   }
 
   addUserToTeam(cleanUserName) {
@@ -79,7 +145,11 @@ export default class TwitchApi {
 
         this.game.allTeams[lowestTeam].push(cleanUserName);
         console.log(this.game.allTeams[lowestTeam]);
-        this.game.allPlayers.push(cleanUserName);
+        console.log('after this');
+        this.game.allPlayers.push({
+          userName: cleanUserName,
+          team: lowestTeam,
+        });
       }
     } else {
       console.log('all full, not added');
@@ -104,8 +174,7 @@ export default class TwitchApi {
   }
 
   checkIfJoined(userName) {
-    if (this.game.allPlayers.includes(userName)) {
-      console.log(userName + ' is already listed');
+    if (this.game.allPlayers.some((player) => player.userName === userName)) {
       return true;
     } else {
       return false;

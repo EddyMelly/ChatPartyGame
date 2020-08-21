@@ -76,8 +76,8 @@ export default class Player {
   }
 
   determineOtherTeams() {
-    this.otherPlayers = this.game.players.filter(
-      (object) => object.colour != this.colour
+    this.otherPlayers = this.game.extractedPlayers.filter(
+      (object) => object.teamColour != this.colour
     );
   }
 

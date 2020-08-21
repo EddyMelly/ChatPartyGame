@@ -4,17 +4,6 @@ import InputHandler from './InputHandler.js';
 import Player from './Player.js';
 import GlassGame from './GlassGame.js';
 import { GAMESTATE, COLOUR } from './SharedConstants.js';
-// const GAMESTATE = {
-//   PAUSED: 0,
-//   JOINING: 1,
-//   FIRSTGAME: 2,
-// };
-// const COLOUR = {
-//   RED: 0,
-//   BLUE: 1,
-//   GREEN: 2,
-//   YELLOW: 3,
-// };
 
 var savedGameState;
 export default class Game {
@@ -25,31 +14,38 @@ export default class Game {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.gameObjects = [];
+
     this.players = [
-      new Player(this, COLOUR.RED),
-      new Player(this, COLOUR.BLUE),
-      new Player(this, COLOUR.GREEN),
-      new Player(this, COLOUR.YELLOW),
+      { teamColour: COLOUR.RED, player: new Player(this, COLOUR.RED) },
+      { teamColour: COLOUR.BLUE, player: new Player(this, COLOUR.BLUE) },
+      { teamColour: COLOUR.GREEN, player: new Player(this, COLOUR.GREEN) },
+      { teamColour: COLOUR.YELLOW, player: new Player(this, COLOUR.YELLOW) },
     ];
     new InputHandler(this.players[0], this, COLOUR.RED);
     new InputHandler(this.players[3], this, COLOUR.YELLOW);
     this.JoiningScreen = new JoiningScreen(this);
     this.currentGameState = null;
     this.allTeams = {
-      red: [],
-      blue: [],
-      green: [],
-      yellow: [],
+      RED: [],
+      BLUE: [],
+      GREEN: [],
+      YELLOW: [],
     };
     this.allPlayers = [];
+    this.extractedPlayers = [];
   }
 
   start() {
     this.currentGameState = GAMESTATE.FIRSTGAME;
-    // this.gameObjects = [this.JoiningScreen];
-    this.gameObjects = [...this.players];
-    this.players.forEach((object) => object.determineOtherTeams());
-    this.TwitchApi = new TwitchApi('ceremor', this);
+    //this.gameObjects = [this.JoiningScreen];
+
+    this.players.forEach((element) => {
+      this.extractedPlayers.push(element.player);
+    });
+
+    this.gameObjects = [...this.extractedPlayers];
+    this.players.forEach((object) => object.player.determineOtherTeams());
+    this.TwitchApi = new TwitchApi('edgarmelons', this);
     this.TwitchApi.connectTwitchChat();
   }
 
@@ -59,23 +55,33 @@ export default class Game {
         break;
       case GAMESTATE.JOINING:
         this.gameObjects = [this.JoiningScreen];
+
         break;
       case GAMESTATE.FIRSTGAME:
         if (this.glassGame === null) {
           this.glassGame = new GlassGame(this);
           this.gameObjects.push(this.glassGame);
         }
-        this.gameObjects = [this.glassGame, ...this.players];
+        this.gameObjects = [this.glassGame, ...this.extractedPlayers];
         this.gameObjects.forEach((object) => object.update(deltaTime));
+
+        if (this.players.length <= 1) {
+          this.victory(this.players[0]);
+        }
         break;
+      case GAMESTATE.VICTORY:
     }
   }
 
   removePlayer(player) {
-    this.players = this.players.filter((object) => object !== player);
-    this.players.forEach((player) => {
-      player.determineOtherTeams();
+    this.players = this.players.filter((object) => object.player !== player);
+    this.extractedPlayers = this.extractedPlayers.filter(
+      (object) => object !== player
+    );
+    this.players.forEach((object) => {
+      object.player.determineOtherTeams();
     });
+    this.e;
   }
 
   // clearOfRect(ctx) {
@@ -121,12 +127,15 @@ export default class Game {
   //   }, 10000);
   // }
 
-  // victory() {
-  //   playSound(this.victoryTune);
-  //   this.restartStatus = true;
-  //   setTimeout(function () {
-  //     restart();
-  //     return;
-  //   }, 10000);
-  // }
+  victory(player) {
+    //console.log(Object.keys(COLOUR)[player.colour]);
+    console.log(player.teamColour + 'wins');
+    this.gamestate = GAMESTATE.VICTORY;
+    // playSound(this.victoryTune);
+    this.restartStatus = true;
+    // setTimeout(function () {
+    //   restart();
+    //   return;
+    // }, 10000);
+  }
 }

@@ -2,11 +2,12 @@ export default class JoiningScreen {
   constructor(game) {
     this.game = game;
     this.teamNamePositions = {
-      red: { x: 150, y: 50 },
-      blue: { x: 550, y: 50 },
-      green: { x: 150, y: 250 },
-      yellow: { x: 550, y: 250 },
+      RED: { x: 150, y: 50 },
+      BLUE: { x: 550, y: 50 },
+      GREEN: { x: 150, y: 250 },
+      YELLOW: { x: 550, y: 250 },
     };
+    this.backGroundImage = document.getElementById('lavaBackground');
   }
 
   update(deltaTime) {}
