@@ -18,3 +18,12 @@ export const DIRECTIONS = {
   UP: 'UP',
   DOWN: 'DOWN',
 };
+
+export const SOUNDS = {
+  VICTORY: document.getElementById('victorySound'),
+  JUMP: document.getElementById('jumpSound'),
+  DEATH: document.getElementById('deathSound'),
+  PUSH: document.getElementById('pushSound'),
+  BLIP: document.getElementById('blipSound'),
+  BLOOP: document.getElementById('bloopSound'),
+};

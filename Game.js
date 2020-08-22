@@ -7,7 +7,7 @@ import ContestantPanels from './ContestantPanels.js';
 import VictoryScreen from './VictoryScreen.js';
 import { playSound } from './PlaySound.js';
 import { restart } from './index.js';
-import { GAMESTATE, COLOUR } from './SharedConstants.js';
+import { GAMESTATE, COLOUR, SOUNDS } from './SharedConstants.js';
 
 export default class Game {
   constructor(gameWidth, gameHeight, ctx, gameArea) {
@@ -18,7 +18,6 @@ export default class Game {
     this.gameHeight = gameHeight;
     this.gameObjects = [];
     this.victoryScreen;
-    this.victorySound = document.getElementById('victorySound');
 
     this.players = [
       { teamColour: COLOUR.RED, player: new Player(this, COLOUR.RED) },
@@ -124,7 +123,7 @@ export default class Game {
     this.victoryScreen = new VictoryScreen(this, player.teamColour);
     this.currentGameState = GAMESTATE.VICTORY;
 
-    playSound(this.victorySound);
+    playSound(SOUNDS.VICTORY);
     this.restartStatus = true;
     setTimeout(function () {
       restart();

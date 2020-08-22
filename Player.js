@@ -1,6 +1,6 @@
 import Animation from './Animation.js';
 import { pushingDetection } from './CollisionDetection.js';
-import { GAMESTATE, DIRECTIONS, COLOUR } from './SharedConstants.js';
+import { GAMESTATE, DIRECTIONS, COLOUR, SOUNDS } from './SharedConstants.js';
 import { playSound } from './PlaySound.js';
 const SPRITE_SIZE = 50;
 
@@ -20,9 +20,6 @@ export default class Player {
     this.position = { x: xPosition, y: yPosition };
     this.canMove = true;
     this.playerState = PLAYER_STATE.ALIVE;
-    this.deathSound = document.getElementById('deathSound');
-    this.jumpSound = document.getElementById('jumpSound');
-    this.pushSound = document.getElementById('pushSound');
 
     switch (this.colour) {
       case COLOUR.RED:
@@ -122,7 +119,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.LEFT;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(this.jumpSound);
+      playSound(SOUNDS.JUMP);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -131,7 +128,7 @@ export default class Player {
     if (this.playerState === PLAYER_STATE.ALIVE) {
       this.canMove = false;
       this.animation.change(this.sprite_sheet.frame_sets[2], 5);
-      playSound(this.deathSound);
+      playSound(SOUNDS.DEATH);
       this.playerState = PLAYER_STATE.DEAD;
       setTimeout(() => {
         this.game.removePlayer(this);
@@ -144,7 +141,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.RIGHT;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(this.jumpSound);
+      playSound(SOUNDS.JUMP);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -153,7 +150,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.UP;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(this.jumpSound);
+      playSound(SOUNDS.JUMP);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -162,7 +159,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.DOWN;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(this.jumpSound);
+      playSound(SOUNDS.JUMP);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -172,7 +169,7 @@ export default class Player {
       this.movement.direction = direction;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(this.pushSound);
+      playSound(SOUNDS.PUSH);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }

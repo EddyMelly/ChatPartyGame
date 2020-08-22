@@ -1,4 +1,6 @@
 import { GlassTile } from './GlassTile.js';
+import { SOUNDS } from './SharedConstants.js';
+import { playSound } from './PlaySound.js';
 const LEVEL_STATE = {
   PAUSED: 0,
   RUNNING: 1,
@@ -62,7 +64,7 @@ export default class GlassGame {
     this.timer = this.timer + 1;
     switch (this.levelState) {
       case LEVEL_STATE.RUNNING:
-        if (this.timer % 3 === 0 && this.glassTiles.length >= 1) {
+        if (this.timer % 4 === 0 && this.glassTiles.length >= 1) {
           this.chooseTileToBreak();
         }
         break;
@@ -79,15 +81,19 @@ export default class GlassGame {
         break;
       case 1:
         this.startMessage = '3';
+        playSound(SOUNDS.BLIP);
         break;
       case 2:
         this.startMessage = '2';
+        playSound(SOUNDS.BLIP);
         break;
       case 3:
         this.startMessage = '1';
+        playSound(SOUNDS.BLIP);
         break;
       case 4:
         this.startMessage = 'GO!';
+        playSound(SOUNDS.BLOOP);
         break;
       case 5:
         this.startMessage = '';

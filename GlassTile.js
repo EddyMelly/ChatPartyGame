@@ -37,7 +37,7 @@ export class GlassTile {
   }
   callEverySecond() {
     this.timer++;
-    if (this.timer % 13 === 0) {
+    if (this.timer % 9 === 0) {
       this.break();
     }
   }
