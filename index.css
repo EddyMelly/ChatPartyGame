@@ -53,6 +53,13 @@ body {
   box-sizing: border-box;
 }
 
+div#fontload {
+  font-family: 'luckiest_guyregular';
+}
+
+div#fontload2 {
+  font-family: 'galindoregular';
+}
 #wb_title {
   background-color: transparent;
   background-image: none;
