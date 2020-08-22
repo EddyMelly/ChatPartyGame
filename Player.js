@@ -28,6 +28,7 @@ export default class Player {
           y: this.game.gameArea.startY,
         };
         this.animationStrip = document.getElementById('redAnimationStrip');
+        this.jumpSound = document.getElementById('redJumpSound');
         break;
       case COLOUR.BLUE:
         this.position = {
@@ -35,6 +36,7 @@ export default class Player {
           y: this.game.gameArea.startY,
         };
         this.animationStrip = document.getElementById('blueAnimationStrip');
+        this.jumpSound = document.getElementById('blueJumpSound');
         break;
       case COLOUR.GREEN:
         this.position = {
@@ -42,6 +44,7 @@ export default class Player {
           y: this.game.gameArea.endY - this.height,
         };
         this.animationStrip = document.getElementById('greenAnimationStrip');
+        this.jumpSound = document.getElementById('greenJumpSound');
         break;
       case COLOUR.YELLOW:
         this.position = {
@@ -49,6 +52,7 @@ export default class Player {
           y: this.game.gameArea.endY - this.height,
         };
         this.animationStrip = document.getElementById('yellowAnimationStrip');
+        this.jumpSound = document.getElementById('yellowJumpSound');
         break;
     }
 
@@ -114,16 +118,6 @@ export default class Player {
     }
   }
 
-  moveLeft() {
-    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
-      this.movement.direction = DIRECTIONS.LEFT;
-      this.movement.activated = true;
-      this.canMove = false;
-      playSound(SOUNDS.JUMP);
-      this.animation.change(this.sprite_sheet.frame_sets[1], 5);
-    }
-  }
-
   death() {
     if (this.playerState === PLAYER_STATE.ALIVE) {
       this.canMove = false;
@@ -136,12 +130,22 @@ export default class Player {
     }
   }
 
+  moveLeft() {
+    if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
+      this.movement.direction = DIRECTIONS.LEFT;
+      this.movement.activated = true;
+      this.canMove = false;
+      playSound(this.jumpSound);
+      this.animation.change(this.sprite_sheet.frame_sets[1], 5);
+    }
+  }
+
   moveRight() {
     if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {
       this.movement.direction = DIRECTIONS.RIGHT;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(SOUNDS.JUMP);
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -150,7 +154,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.UP;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(SOUNDS.JUMP);
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -159,7 +163,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.DOWN;
       this.movement.activated = true;
       this.canMove = false;
-      playSound(SOUNDS.JUMP);
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
