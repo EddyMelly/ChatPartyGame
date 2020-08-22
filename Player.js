@@ -24,32 +24,32 @@ export default class Player {
     switch (this.colour) {
       case COLOUR.RED:
         this.position = {
-          x: this.game.gameArea.startX,
-          y: this.game.gameArea.startY,
+          x: this.game.gameArea.startX + this.width,
+          y: this.game.gameArea.startY + this.height,
         };
         this.animationStrip = document.getElementById('redAnimationStrip');
         this.jumpSound = document.getElementById('redJumpSound');
         break;
       case COLOUR.BLUE:
         this.position = {
-          x: this.game.gameArea.endX - this.width,
-          y: this.game.gameArea.startY,
+          x: this.game.gameArea.endX - this.width * 2,
+          y: this.game.gameArea.startY + this.height,
         };
         this.animationStrip = document.getElementById('blueAnimationStrip');
         this.jumpSound = document.getElementById('blueJumpSound');
         break;
       case COLOUR.GREEN:
         this.position = {
-          x: this.game.gameArea.startX,
-          y: this.game.gameArea.endY - this.height,
+          x: this.game.gameArea.startX + this.width,
+          y: this.game.gameArea.endY - this.height * 2,
         };
         this.animationStrip = document.getElementById('greenAnimationStrip');
         this.jumpSound = document.getElementById('greenJumpSound');
         break;
       case COLOUR.YELLOW:
         this.position = {
-          x: this.game.gameArea.endX - this.width,
-          y: this.game.gameArea.endY - this.height,
+          x: this.game.gameArea.endX - this.width * 2,
+          y: this.game.gameArea.endY - this.height * 2,
         };
         this.animationStrip = document.getElementById('yellowAnimationStrip');
         this.jumpSound = document.getElementById('yellowJumpSound');
