@@ -4,9 +4,11 @@ import InputHandler from './InputHandler.js';
 import Player from './Player.js';
 import GlassGame from './GlassGame.js';
 import ContestantPanels from './ContestantPanels.js';
+import VictoryScreen from './VictoryScreen.js';
+import { playSound } from './PlaySound.js';
+import { restart } from './index.js';
 import { GAMESTATE, COLOUR } from './SharedConstants.js';
 
-var savedGameState;
 export default class Game {
   constructor(gameWidth, gameHeight, ctx, gameArea) {
     this.gameArea = gameArea;
@@ -15,6 +17,8 @@ export default class Game {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.gameObjects = [];
+    this.victoryScreen;
+    this.victorySound = document.getElementById('victorySound');
 
     this.players = [
       { teamColour: COLOUR.RED, player: new Player(this, COLOUR.RED) },
@@ -43,9 +47,8 @@ export default class Game {
     this.players.forEach((element) => {
       this.extractedPlayers.push(element.player);
     });
-
     this.players.forEach((object) => object.player.determineOtherTeams());
-    this.TwitchApi = new TwitchApi('edgarmelons', this);
+    this.TwitchApi = new TwitchApi('ceremor', this);
     this.TwitchApi.connectTwitchChat();
   }
 
@@ -80,7 +83,7 @@ export default class Game {
         }
         break;
       case GAMESTATE.VICTORY:
-        this.gameObjects = [this.contestantPanels];
+        this.gameObjects = [this.contestantPanels, this.victoryScreen];
     }
   }
 
@@ -94,18 +97,7 @@ export default class Game {
     });
   }
 
-  // clearOfRect(ctx) {
-  //   ctx.clearRect(0, 0, this.width, this.height);
-  //   ctx.closePath();
-  //   ctx.beginPath();
-  // }
-
   draw(ctx) {
-    // if (savedGamestate !== this.gamestate) {
-    //   this.clearOfRect(ctx);
-    //   savedGamestate = this.gamestate;
-    // }
-
     this.gameObjects.forEach((object) => object.draw(ctx));
     ctx.font = '12px Monospace';
     ctx.fillStyle = 'white';
@@ -128,23 +120,15 @@ export default class Game {
     );
   }
 
-  // gameOver() {
-  //   playSound(this.failureTune);
-  //   this.restartStatus = true;
-  //   setTimeout(function () {
-  //     restart();
-  //     return;
-  //   }, 10000);
-  // }
-
   victory(player) {
-    console.log(player.teamColour + 'wins');
+    this.victoryScreen = new VictoryScreen(this, player.teamColour);
     this.currentGameState = GAMESTATE.VICTORY;
-    // playSound(this.victoryTune);
+
+    playSound(this.victorySound);
     this.restartStatus = true;
-    // setTimeout(function () {
-    //   restart();
-    //   return;
-    // }, 10000);
+    setTimeout(function () {
+      restart();
+      return;
+    }, 10000);
   }
 }

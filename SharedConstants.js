@@ -9,7 +9,7 @@ export const COLOUR = {
   RED: 'RED',
   BLUE: 'BLUE',
   GREEN: 'GREEN',
-  YELLOW: 'YELLO',
+  YELLOW: 'YELLOW',
 };
 
 export const DIRECTIONS = {

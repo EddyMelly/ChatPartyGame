@@ -1,6 +1,7 @@
 import Animation from './Animation.js';
 import { pushingDetection } from './CollisionDetection.js';
 import { GAMESTATE, DIRECTIONS, COLOUR } from './SharedConstants.js';
+import { playSound } from './PlaySound.js';
 const SPRITE_SIZE = 50;
 
 const PLAYER_STATE = {
@@ -19,6 +20,9 @@ export default class Player {
     this.position = { x: xPosition, y: yPosition };
     this.canMove = true;
     this.playerState = PLAYER_STATE.ALIVE;
+    this.deathSound = document.getElementById('deathSound');
+    this.jumpSound = document.getElementById('jumpSound');
+    this.pushSound = document.getElementById('pushSound');
 
     switch (this.colour) {
       case COLOUR.RED:
@@ -118,6 +122,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.LEFT;
       this.movement.activated = true;
       this.canMove = false;
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -126,10 +131,11 @@ export default class Player {
     if (this.playerState === PLAYER_STATE.ALIVE) {
       this.canMove = false;
       this.animation.change(this.sprite_sheet.frame_sets[2], 5);
+      playSound(this.deathSound);
       this.playerState = PLAYER_STATE.DEAD;
       setTimeout(() => {
         this.game.removePlayer(this);
-      }, 7000);
+      }, 5000);
     }
   }
 
@@ -138,6 +144,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.RIGHT;
       this.movement.activated = true;
       this.canMove = false;
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -146,6 +153,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.UP;
       this.movement.activated = true;
       this.canMove = false;
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -154,6 +162,7 @@ export default class Player {
       this.movement.direction = DIRECTIONS.DOWN;
       this.movement.activated = true;
       this.canMove = false;
+      playSound(this.jumpSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -163,6 +172,7 @@ export default class Player {
       this.movement.direction = direction;
       this.movement.activated = true;
       this.canMove = false;
+      playSound(this.pushSound);
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
@@ -186,9 +196,6 @@ export default class Player {
   }
 
   update(deltaTime) {
-    if (this.game.currentGameState == GAMESTATE.PAUSED) {
-      return;
-    }
     if (this.movement.activated) {
       this.movingDirection(this.movement.direction);
       this.otherPlayers.forEach((player) => {
@@ -208,9 +215,6 @@ export default class Player {
     }
     if (this.position.y + this.height > this.game.gameArea.endY) {
       this.death();
-    }
-
-    if (this.playerState === PLAYER_STATE.DEAD) {
     }
   }
 }

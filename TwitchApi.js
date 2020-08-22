@@ -59,14 +59,6 @@ export default class TwitchApi {
           if (upperCaseMessageClean === 'JOIN') {
             this.addUserToTeam(clean_username);
           }
-          if (
-            upperCaseMessageClean === DIRECTIONS.LEFT ||
-            upperCaseMessageClean === DIRECTIONS.RIGHT ||
-            upperCaseMessageClean === DIRECTIONS.UP ||
-            upperCaseMessageClean === DIRECTIONS.DOWN
-          ) {
-            this.performInstruction(clean_username, upperCaseMessageClean);
-          }
           break;
         case GAMESTATE.PAUSED:
           //DO NOTHING
@@ -75,9 +67,6 @@ export default class TwitchApi {
           //VICTORY
           break;
         case GAMESTATE.FIRSTGAME:
-          if (upperCaseMessageClean === 'JOIN') {
-            this.addUserToTeam(clean_username);
-          }
           if (
             upperCaseMessageClean === DIRECTIONS.LEFT ||
             upperCaseMessageClean === DIRECTIONS.RIGHT ||
@@ -167,12 +156,10 @@ export default class TwitchApi {
   }
 
   checkIfJoined(userName) {
-    return false;
-    //CHANGETHIS
-    // if (this.game.allPlayers.some((player) => player.userName === userName)) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
+    if (this.game.allPlayers.some((player) => player.userName === userName)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
