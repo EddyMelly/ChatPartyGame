@@ -76,7 +76,7 @@ export default class Game {
           ...this.extractedPlayers,
         ];
         this.gameObjects.forEach((object) => object.update(deltaTime));
-        if (this.players.length === 2) {
+        if (this.players.length === 2 && this.glassGame.breakTimer !== 3) {
           this.glassGame.breakTimer = 3;
         }
 
