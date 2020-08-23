@@ -172,8 +172,8 @@ export default class Player {
   }
 
   // EXPERIMENTAL JUMP FEATURE
-  moveJump(){
-    if(this.canMove && this.playerState == PLAYER_STATE.ALIVE){
+  moveJump() {
+    if (this.canMove && this.playerState == PLAYER_STATE.ALIVE) {
       this.canMove = false;
       this.movement.direction = DIRECTIONS.JUMP;
       this.movement.activated = true;

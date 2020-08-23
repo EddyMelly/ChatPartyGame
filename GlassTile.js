@@ -34,14 +34,13 @@ export class GlassTile {
       });
     }
 
-    if(!this.breaking){
-      this.game.players.forEach((object) =>{
-        if(jumpingDetection(this, object.player)){
+    if (!this.breaking) {
+      this.game.players.forEach((object) => {
+        if (jumpingDetection(this, object.player)) {
           this.breaking = true;
           this.break();
         }
-      })
-
+      });
     }
   }
   callEverySecond() {

@@ -76,6 +76,9 @@ export default class Game {
           ...this.extractedPlayers,
         ];
         this.gameObjects.forEach((object) => object.update(deltaTime));
+        if (this.players.length === 2) {
+          this.glassGame.breakTimer = 3;
+        }
 
         if (this.players.length <= 1) {
           this.victory(this.players[0]);
@@ -120,13 +123,12 @@ export default class Game {
   }
 
   victory(player) {
-    
-    if(player && player.player.playerState === 0){
+    if (player && player.player.playerState === 0) {
       this.victoryScreen = new VictoryScreen(this, player.teamColour);
-    }else{
-      this.victoryScreen = new VictoryScreen(this, "umm... no one?");
+    } else {
+      this.victoryScreen = new VictoryScreen(this, 'umm... no one?');
     }
-    
+
     this.currentGameState = GAMESTATE.VICTORY;
 
     playSound(SOUNDS.VICTORY);
