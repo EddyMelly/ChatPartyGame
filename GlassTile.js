@@ -1,4 +1,4 @@
-import { lavaDetection } from './CollisionDetection.js';
+import { lavaDetection, jumpingDetection } from './CollisionDetection.js';
 
 const TILE_SIZE = 50;
 export class GlassTile {
@@ -16,13 +16,12 @@ export class GlassTile {
     };
     this.currentTile = 0;
     this.animationTimer = 0;
-    this.canBreak = false;
     this.timer = 0;
   }
 
   update(deltaTime) {
     this.animationTimer += deltaTime / 1000;
-    if (this.animationTimer > 1) {
+    if (this.animationTimer > 1 && this.breaking) {
       this.callEverySecond();
       this.animationTimer = 0;
     }
@@ -34,10 +33,20 @@ export class GlassTile {
         }
       });
     }
+
+    if(!this.breaking){
+      this.game.players.forEach((object) =>{
+        if(jumpingDetection(this, object.player)){
+          this.breaking = true;
+          this.break();
+        }
+      })
+
+    }
   }
   callEverySecond() {
     this.timer++;
-    if (this.timer % 9 === 0) {
+    if (this.timer % 12 === 0) {
       this.break();
     }
   }

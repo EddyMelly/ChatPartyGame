@@ -1,6 +1,6 @@
 import { COLOUR } from './SharedConstants.js';
 
-export default class JoiningScreen {
+export default class VictoryScreen {
   constructor(game, winningTeam) {
     this.winningTeam = winningTeam;
     this.game = game;
@@ -22,6 +22,7 @@ export default class JoiningScreen {
       default:
         this.winningTeamColour = 'black';
     }
+    
   }
 
   update(deltaTime) {}

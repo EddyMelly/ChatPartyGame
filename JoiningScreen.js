@@ -46,7 +46,7 @@ export default class JoiningScreen {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'left';
 
-    ctx.fillText(this.timer, 575, 95);
+    ctx.fillText(this.timer, 575, 100);
 
     ctx.font = '30px luckiest_guyregular';
     ctx.fillStyle = 'black';

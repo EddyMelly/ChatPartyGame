@@ -120,7 +120,13 @@ export default class Game {
   }
 
   victory(player) {
-    this.victoryScreen = new VictoryScreen(this, player.teamColour);
+    
+    if(player && player.player.playerState === 0){
+      this.victoryScreen = new VictoryScreen(this, player.teamColour);
+    }else{
+      this.victoryScreen = new VictoryScreen(this, "umm... no one?");
+    }
+    
     this.currentGameState = GAMESTATE.VICTORY;
 
     playSound(SOUNDS.VICTORY);

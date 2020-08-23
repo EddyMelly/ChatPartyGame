@@ -18,13 +18,22 @@ export function lavaDetection(lavaTile, player) {
   }
 }
 
+export function jumpingDetection(glassTile, player){
+  if(lavaDetection(glassTile, player) && player.movement.direction === DIRECTIONS.JUMP){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 export function pushingDetection(stillPlayer, movingPlayer, movementDirection) {
   switch (movementDirection) {
     case DIRECTIONS.UP:
       if (
         movingPlayer.position.x == stillPlayer.position.x &&
-        movingPlayer.position.y <= stillPlayer.position.y + 25 &&
-        movingPlayer.position.y >= stillPlayer.position.y
+        movingPlayer.position.y <= stillPlayer.position.y + 45 &&
+        movingPlayer.position.y >= stillPlayer.position.y &&
+        stillPlayer.canMove
       ) {
         return true;
       }
@@ -33,9 +42,10 @@ export function pushingDetection(stillPlayer, movingPlayer, movementDirection) {
       if (
         movingPlayer.position.x == stillPlayer.position.x &&
         movingPlayer.position.y + movingPlayer.width >=
-          stillPlayer.position.y + 25 &&
+          stillPlayer.position.y + 5 &&
         movingPlayer.position.y + movingPlayer.width <=
-          stillPlayer.position.y + stillPlayer.height
+          stillPlayer.position.y + stillPlayer.height &&
+        stillPlayer.canMove
       ) {
         return true;
       }
@@ -43,8 +53,9 @@ export function pushingDetection(stillPlayer, movingPlayer, movementDirection) {
     case DIRECTIONS.LEFT:
       if (
         movingPlayer.position.y == stillPlayer.position.y &&
-        movingPlayer.position.x <= stillPlayer.position.x + 25 &&
-        movingPlayer.position.x >= stillPlayer.position.x
+        movingPlayer.position.x <= stillPlayer.position.x + 45 &&
+        movingPlayer.position.x >= stillPlayer.position.x &&
+        stillPlayer.canMove
       ) {
         return true;
       }
@@ -53,9 +64,10 @@ export function pushingDetection(stillPlayer, movingPlayer, movementDirection) {
       if (
         movingPlayer.position.y == stillPlayer.position.y &&
         movingPlayer.position.x + movingPlayer.width >=
-          stillPlayer.position.x + 25 &&
+          stillPlayer.position.x + 5 &&
         movingPlayer.position.x + movingPlayer.width <=
-          stillPlayer.position.x + stillPlayer.height
+          stillPlayer.position.x + stillPlayer.height &&
+          stillPlayer.canMove
       ) {
         return true;
       }

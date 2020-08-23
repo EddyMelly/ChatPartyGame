@@ -17,6 +17,8 @@ export default class InputHandler {
           case 40:
             player.player.moveDown();
             break;
+          case 74:
+            player.player.moveJump();
         }
       } else {
         switch (event.keyCode) {
@@ -54,6 +56,11 @@ export default class InputHandler {
           }
           break;
         case 40:
+          if (player.speed > 0) {
+            player.player.stop();
+          }
+          break;
+          case 74:
           if (player.speed > 0) {
             player.player.stop();
           }

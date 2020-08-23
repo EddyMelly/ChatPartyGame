@@ -110,6 +110,9 @@ export default class Player {
           this.position.y = this.position.y + this.height / 20;
           //}
           break;
+        case DIRECTIONS.JUMP:
+          this.position.x = this.position.x;
+          break;
       }
     } else {
       if (this.playerState === PLAYER_STATE.ALIVE) {
@@ -167,6 +170,18 @@ export default class Player {
       this.animation.change(this.sprite_sheet.frame_sets[1], 5);
     }
   }
+
+  // EXPERIMENTAL JUMP FEATURE
+  moveJump(){
+    if(this.canMove && this.playerState == PLAYER_STATE.ALIVE){
+      this.canMove = false;
+      this.movement.direction = DIRECTIONS.JUMP;
+      this.movement.activated = true;
+      playSound(this.jumpSound);
+      this.animation.change(this.sprite_sheet.frame_sets[1], 5);
+    }
+  }
+  // EXPERIMENTAL JUMP FEATURE
 
   push(direction) {
     if (this.canMove && this.playerState === PLAYER_STATE.ALIVE) {

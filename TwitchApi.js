@@ -71,7 +71,8 @@ export default class TwitchApi {
             upperCaseMessageClean === DIRECTIONS.LEFT ||
             upperCaseMessageClean === DIRECTIONS.RIGHT ||
             upperCaseMessageClean === DIRECTIONS.UP ||
-            upperCaseMessageClean === DIRECTIONS.DOWN
+            upperCaseMessageClean === DIRECTIONS.DOWN ||
+            upperCaseMessageClean === DIRECTIONS.JUMP
           ) {
             this.performInstruction(clean_username, upperCaseMessageClean);
           }
@@ -115,6 +116,9 @@ export default class TwitchApi {
         break;
       case DIRECTIONS.DOWN:
         playerTeam.moveDown();
+        break;
+        case DIRECTIONS.JUMP:
+        playerTeam.moveJump();
         break;
       default:
         break;

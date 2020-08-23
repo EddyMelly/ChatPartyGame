@@ -17,6 +17,7 @@ export const DIRECTIONS = {
   RIGHT: 'RIGHT',
   UP: 'UP',
   DOWN: 'DOWN',
+  JUMP: 'JUMP'
 };
 
 export const SOUNDS = {

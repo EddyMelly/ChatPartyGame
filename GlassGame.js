@@ -32,6 +32,9 @@ export default class GlassGame {
     this.startMessage = '';
   }
 
+
+
+
   buildLevel(game) {
     level.forEach((row, rowIndex) => {
       row.forEach((tile, tileIndex) => {
@@ -46,17 +49,24 @@ export default class GlassGame {
     });
   }
 
+
+
   chooseTileToBreak() {
     if (this.glassTilesBreaking.length === 0) {
       var randomTile = this.glassTiles[
         Math.floor(Math.random() * this.glassTiles.length)
       ];
       randomTile.breaking = true;
+      randomTile.break();
     } else {
-      var randomTile = this.glassTilesNotBreaking[
-        Math.floor(Math.random() * this.glassTilesNotBreaking.length)
-      ];
-      randomTile.breaking = true;
+      if(this.glassTilesNotBreaking.length >=1){
+        var randomTile = this.glassTilesNotBreaking[
+          Math.floor(Math.random() * this.glassTilesNotBreaking.length)
+        ];
+        randomTile.breaking = true;
+        randomTile.break();
+      }
+     
     }
   }
 
@@ -64,7 +74,7 @@ export default class GlassGame {
     this.timer = this.timer + 1;
     switch (this.levelState) {
       case LEVEL_STATE.RUNNING:
-        if (this.timer % 4 === 0 && this.glassTiles.length >= 1) {
+        if (this.timer % 6 === 0 && this.glassTiles.length >= 1) {
           this.chooseTileToBreak();
         }
         break;
@@ -118,7 +128,11 @@ export default class GlassGame {
       (object) => object.breaking
     );
 
-    this.glassTilesBreaking.forEach((object) => object.update(deltaTime));
+    //TEST CODE FOR JUMPING MECHANIC
+      this.glassTiles.forEach((object) => object.update(deltaTime));
+    //TEST CODE FOR JUMPING MECHANIC
+
+    // this.glassTilesBreaking.forEach((object) => object.update(deltaTime));
 
     this.animationTimer += deltaTime / 1000;
     if (this.animationTimer >= 1) {
