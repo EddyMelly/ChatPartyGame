@@ -23,27 +23,36 @@ export default class GlassGame {
     this.game = game;
     this.levelState = LEVEL_STATE.PAUSED;
     this.glassTiles = [];
-    this.buildLevel(this.game);
     this.glassTilesBreaking = [];
     this.glassTilesNotBreaking = [];
-    this.breakTimer = 6;
+    this.indexedGlassTiles = [];
+    this.breakTimer = 56;
     this.animationTimer = 0;
     this.timer = 0;
     this.backGroundImage = document.getElementById('lavaBackground');
     this.startMessage = '';
+    this.buildLevel(this.game);
   }
 
   buildLevel(game) {
     level.forEach((row, rowIndex) => {
+      let tempArray = [];
       row.forEach((tile, tileIndex) => {
         if (tile === 1) {
           let position = {
             x: this.game.gameArea.startX + 50 * tileIndex,
             y: this.game.gameArea.startY + 50 * rowIndex,
           };
-          this.glassTiles.push(new GlassTile(game, position));
+          let tempGlassTile = {
+            XIndex: tileIndex,
+            YIndex: rowIndex,
+            tile: new GlassTile(game, position),
+          };
+          this.glassTiles.push(tempGlassTile);
+          tempArray.push(tempGlassTile);
         }
       });
+      this.indexedGlassTiles.push(tempArray);
     });
   }
 
@@ -52,17 +61,43 @@ export default class GlassGame {
       var randomTile = this.glassTiles[
         Math.floor(Math.random() * this.glassTiles.length)
       ];
-      randomTile.breaking = true;
-      randomTile.break();
+      randomTile.tile.breaking = true;
+      randomTile.tile.break();
     } else {
       if (this.glassTilesNotBreaking.length >= 1) {
         var randomTile = this.glassTilesNotBreaking[
           Math.floor(Math.random() * this.glassTilesNotBreaking.length)
         ];
-        randomTile.breaking = true;
-        randomTile.break();
+        randomTile.tile.breaking = true;
+        randomTile.tile.break();
       }
     }
+  }
+
+  chooseTilesToBreak() {
+    this.indexedGlassTiles.forEach((row, rowIndex) => {
+      if (rowIndex === 0 || rowIndex === this.indexedGlassTiles.length - 1) {
+        row.forEach((tile, tileIndex) => {
+          tile.tile.breaking = true;
+          tile.tile.break();
+        });
+      } else {
+        row.forEach((tile, tileIndex) => {
+          if (tileIndex === row.length - 1) {
+            tile.tile.breaking = true;
+            tile.tile.break();
+            row.splice(tileIndex, 1);
+          }
+          if (tileIndex === 0) {
+            tile.tile.breaking = true;
+            tile.tile.break();
+            row.splice(tileIndex, 1);
+          }
+        });
+      }
+    });
+    this.indexedGlassTiles.splice(this.indexedGlassTiles.length - 1, 1);
+    this.indexedGlassTiles.splice(0, 1);
   }
 
   callEverySecond() {
@@ -70,7 +105,7 @@ export default class GlassGame {
     switch (this.levelState) {
       case LEVEL_STATE.RUNNING:
         if (this.timer % this.breakTimer === 0 && this.glassTiles.length >= 1) {
-          this.chooseTileToBreak();
+          this.chooseTilesToBreak();
         }
         break;
       case LEVEL_STATE.PAUSED:
@@ -115,16 +150,17 @@ export default class GlassGame {
       case LEVEL_STATE.RUNNING:
         break;
     }
-    this.glassTilesNotBreaking = this.glassTiles.filter(
-      (object) => !object.breaking
-    );
+    //FOR RANDOM TILE BREAKS
+    // this.glassTilesNotBreaking = this.glassTiles.filter(
+    //   (object) => !object.tile.breaking
+    // );
 
-    this.glassTilesBreaking = this.glassTiles.filter(
-      (object) => object.breaking
-    );
+    // this.glassTilesBreaking = this.glassTiles.filter(
+    //   (object) => object.tile.breaking
+    // );
 
     //TEST CODE FOR JUMPING MECHANIC
-    this.glassTiles.forEach((object) => object.update(deltaTime));
+    this.glassTiles.forEach((object) => object.tile.update(deltaTime));
     //TEST CODE FOR JUMPING MECHANIC
 
     // this.glassTilesBreaking.forEach((object) => object.update(deltaTime));
@@ -145,6 +181,6 @@ export default class GlassGame {
 
       ctx.fillText(this.startMessage, 600, 45);
     }
-    this.glassTiles.forEach((object) => object.draw(ctx));
+    this.glassTiles.forEach((object) => object.tile.draw(ctx));
   }
 }
