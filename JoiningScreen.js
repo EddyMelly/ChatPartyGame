@@ -1,3 +1,4 @@
+import Animation from './Animation.js';
 export default class JoiningScreen {
   constructor(game) {
     this.game = game;
@@ -12,6 +13,14 @@ export default class JoiningScreen {
     this.currentWaitingMessage = this.waitingMessage[0];
     this.ticker = 0;
     this.timer = 60;
+    this.sprite_sheet = {
+      frame_sets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+      image: document.getElementById('joinStrip'),
+    };
+    this.animation = this.animation = new Animation(
+      this.sprite_sheet.frame_sets,
+      2
+    );
   }
 
   update(deltaTime) {
@@ -20,6 +29,7 @@ export default class JoiningScreen {
       this.callEverySecond();
       this.ticker = 0;
     }
+    this.animation.update(deltaTime);
   }
 
   callEverySecond() {
@@ -53,5 +63,17 @@ export default class JoiningScreen {
     ctx.textAlign = 'left';
 
     ctx.fillText(this.currentWaitingMessage, 450, 45);
+
+    ctx.drawImage(
+      this.sprite_sheet.image,
+      this.animation.frame * 150,
+      0,
+      150,
+      150,
+      367,
+      175,
+      150,
+      150
+    );
   }
 }
