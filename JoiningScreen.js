@@ -66,6 +66,12 @@ export default class JoiningScreen {
 
     ctx.fillText(this.currentWaitingMessage, 450, 45);
 
+    ctx.font = '30px luckiest_guyregular';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+
+    ctx.fillText(`MINIMUM PLAYERS NEEDED: ${this.minimumPlayers}`, 600, 685);
+
     ctx.drawImage(
       this.sprite_sheet.image,
       this.animation.frame * 150,
