@@ -12,7 +12,8 @@ export default class JoiningScreen {
     ];
     this.currentWaitingMessage = this.waitingMessage[0];
     this.ticker = 0;
-    this.timer = 60;
+    this.timer = 70;
+    this.minimumPlayers = 8;
     this.sprite_sheet = {
       frame_sets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
       image: document.getElementById('joinStrip'),
@@ -42,10 +43,11 @@ export default class JoiningScreen {
     this.currentWaitingMessage = this.waitingMessage[nextIndex];
 
     if (this.timer === 0) {
-      if (this.game.allPlayers.length >= 8) {
+      if (this.game.allPlayers.length >= this.minimumPlayers) {
         this.game.startGlassGame();
       } else {
-        this.timer = 60;
+        this.timer = 70;
+        this.minimumPlayers = 4;
       }
     }
   }
