@@ -67,6 +67,7 @@ export default class Player {
       frameToReach: 20,
       currentFrame: 0,
     };
+    this.movementBuffer = [];
   }
 
   resetMovement() {
@@ -131,6 +132,24 @@ export default class Player {
         this.game.removePlayer(this);
       }, 5000);
     }
+  }
+
+  moveLeftBuffer() {
+    this.movementBuffer.push(this.moveLeft.bind(this));
+  }
+
+  moveRightBuffer() {
+    this.movementBuffer.push(this.moveRight.bind(this));
+  }
+
+  moveUpBuffer() {
+    this.movementBuffer.push(this.moveUp.bind(this));
+  }
+  moveDownBuffer() {
+    this.movementBuffer.push(this.moveDown.bind(this));
+  }
+  moveJumpBuffer() {
+    this.movementBuffer.push(this.moveJump.bind(this));
   }
 
   moveLeft() {
@@ -212,6 +231,10 @@ export default class Player {
   }
 
   update(deltaTime) {
+    if (this.movementBuffer.length !== 0 && this.canMove) {
+      this.movementBuffer[0]();
+      var completedMovement = this.movementBuffer.shift();
+    }
     if (this.movement.activated) {
       this.movingDirection(this.movement.direction);
       this.otherPlayers.forEach((player) => {

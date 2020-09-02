@@ -6,33 +6,33 @@ export default class InputHandler {
       if (colour === COLOUR.RED) {
         switch (event.keyCode) {
           case 37:
-            player.player.moveLeft();
+            player.player.moveLeftBuffer();
             break;
           case 38:
-            player.player.moveUp();
+            player.player.moveUpBuffer();
             break;
           case 39:
-            player.player.moveRight();
+            player.player.moveRightBuffer();
             break;
           case 40:
-            player.player.moveDown();
+            player.player.moveDownBuffer();
             break;
           case 74:
-            player.player.moveJump();
+            player.player.moveJumpBuffer();
         }
       } else {
         switch (event.keyCode) {
           case 65:
-            player.player.moveLeft();
+            player.player.moveLeftBuffer();
             break;
           case 87:
-            player.player.moveUp();
+            player.player.moveUpBuffer();
             break;
           case 68:
-            player.player.moveRight();
+            player.player.moveRightBuffer();
             break;
           case 83:
-            player.player.moveDown();
+            player.player.moveDownBuffer();
             break;
         }
       }
@@ -60,7 +60,7 @@ export default class InputHandler {
             player.player.stop();
           }
           break;
-          case 74:
+        case 74:
           if (player.speed > 0) {
             player.player.stop();
           }

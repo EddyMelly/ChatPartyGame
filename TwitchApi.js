@@ -106,19 +106,19 @@ export default class TwitchApi {
   completeInstruction(playerTeam, instruction) {
     switch (instruction) {
       case DIRECTIONS.LEFT:
-        playerTeam.moveLeft();
+        playerTeam.moveLeftBuffer();
         break;
       case DIRECTIONS.RIGHT:
-        playerTeam.moveRight();
+        playerTeam.moveRightBuffer();
         break;
       case DIRECTIONS.UP:
-        playerTeam.moveUp();
+        playerTeam.moveUpBuffer();
         break;
       case DIRECTIONS.DOWN:
-        playerTeam.moveDown();
+        playerTeam.moveDownBuffer();
         break;
-        case DIRECTIONS.JUMP:
-        playerTeam.moveJump();
+      case DIRECTIONS.JUMP:
+        playerTeam.moveJumpBuffer();
         break;
       default:
         break;
